@@ -55,10 +55,11 @@ merged <- merged[, grepl("MEAN|STDDEV|subject|activity", names(merged))]
 merged <- data.table(merged)
 
 # find mean of every variable grouped by subject and activity
-cleaned_dataset <- merged[, lapply(.SD, mean), by=list(subject,activity)]
+tidy_dataset <- merged[, lapply(.SD, mean), by=list(subject,activity)]
 
 # append Average to each column name to better describe results
-cleaned_names <- names(cleaned_dataset)
-names(cleaned_dataset) <- append(cleaned_names[c(1,2)], paste("Average", cleaned_names[-c(1, 2)], sep = "_"))
+cleaned_names <- names(tidy_dataset)
+names(tidy_dataset) <- append(cleaned_names[c(1,2)], paste("Average", cleaned_names[-c(1, 2)], sep = "_"))
 
-return(cleaned_dataset)
+tidy_dataset <- tidy_dataset[with(tidy_dataset, order(subject, activity)), ]
+return(tidy_dataset)
